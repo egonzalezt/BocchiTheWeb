@@ -2,9 +2,8 @@ import { useState } from 'react';
 // @mui
 import { alpha } from '@mui/material/styles';
 import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton, Popover } from '@mui/material';
-// mocks_
-import account from '../../../_mock/account';
 // states
+import { Link } from 'react-router-dom';
 import useUserStore from '../../../stateStore/zustand';
 // ----------------------------------------------------------------------
 
@@ -12,14 +11,17 @@ const MENU_OPTIONS = [
   {
     label: 'Home',
     icon: 'eva:home-fill',
+    destination: '/dashboard/app'
   },
   {
-    label: 'Profile',
+    label: 'Archivos',
     icon: 'eva:person-fill',
+    destination: '/dashboard/files'
   },
   {
-    label: 'Settings',
+    label: 'Solicitudes',
     icon: 'eva:settings-2-fill',
+    destination: '/dashboard/requests'
   },
 ];
 
@@ -56,7 +58,7 @@ export default function AccountPopover() {
           }),
         }}
       >
-        <Avatar src={account.photoURL} alt="photoURL" />
+        <Avatar src={"/assets/images/avatars/avatar_default.png"} alt="photoURL" />
       </IconButton>
 
       <Popover
@@ -91,12 +93,13 @@ export default function AccountPopover() {
 
         <Stack sx={{ p: 1 }}>
           {MENU_OPTIONS.map((option) => (
-            <MenuItem key={option.label} onClick={handleClose}>
-              {option.label}
-            </MenuItem>
+            <Link key={option.label} to={option.destination} style={{ textDecoration: 'none', color: 'inherit' }} onClick={handleClose}>
+              <MenuItem>
+                {option.label}
+              </MenuItem>
+            </Link>
           ))}
         </Stack>
-
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <MenuItem onClick={handleClose} sx={{ m: 1 }}>

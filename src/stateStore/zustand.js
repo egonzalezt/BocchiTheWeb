@@ -6,8 +6,8 @@ const useUserStore = create((set) => ({
   init: async () => {
     try {
       // Fetch the user information from the API
-      const response = await UserApi.getUser();
-      const user = response.data;
+      // const response = await UserApi.getUser();
+      const user = {name: ""}
 
       // Set the user information in the store
       set({ user });

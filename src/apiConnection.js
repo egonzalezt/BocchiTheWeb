@@ -1,7 +1,7 @@
 import { enqueueSnackbar } from 'notistack';
 import axios from 'axios';
 
-const baseUrl = 'http://localhost:5209/api/';
+const baseUrl = 'http://localhost:5295/';
 const axiosInstance = axios.create({
   baseURL: baseUrl,
   headers: {
@@ -9,14 +9,16 @@ const axiosInstance = axios.create({
   },
 });
 
-let retryCounter = 1;
-const MAX_RETRIES = 4;
+// Función para redirigir al usuario al inicio de sesión
+const redirectToLogin = () => {
+  window.location.href = '/login';
+};
 
 // Add a request interceptor
 axiosInstance.interceptors.request.use(
   (config) => {
     // Modify the request config to include CORS headers
-    config.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000';
+    config.headers['Access-Control-Allow-Origin'] = 'http://localhost:5295';
     config.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE';
     config.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization';
 
@@ -34,45 +36,24 @@ axiosInstance.interceptors.response.use(
   },
   (error) => {
     const originalRequest = error.config;
-
-    // Handle 401 Unauthorized error and limit retries
-    if (error.response.status === 401 && !originalRequest._retry && retryCounter < MAX_RETRIES) {
+    // Check if error response status is 401 (Unauthorized) and redirect to login page if so
+    if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      retryCounter+=retryCounter;
-
-      // Perform token renewal logic, e.g., making a request to refresh the token
-      const refreshToken = localStorage.getItem('refreshToken');
-      return axiosInstance
-        .post('/auth/refresh', { refreshToken })
+      return axiosInstance.post('/auth/validate-token', null, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      })
         .then((res) => {
-          if (res.status === 200) {
-            const newToken = res.data.accessToken;
-
-            // Update the stored token in localStorage or any other source
-            localStorage.setItem('accessToken', newToken);
-
-            // Update the Authorization header with the new token
-            axiosInstance.defaults.headers.common.Authorization = `Bearer ${newToken}`;
-
-            // Reset the retry counter
-            retryCounter = 0;
-
-            // Retry the original request with the new token
-            return axiosInstance(originalRequest);
-          }
-          return Promise.reject(error); // Add this line to handle unsuccessful token renewal
+          // If token is verified, retry original request
+          return axiosInstance(originalRequest);
         })
-        .catch((error) => {
-          return Promise.reject(error);
+        .catch(() => {
+          // If token verification fails, redirect to login page
+          enqueueSnackbar('La sesión ha expirado, por favor conéctese de nuevo.', { variant: 'error' });
+          redirectToLogin();
         });
     }
-
-    if (error.response.status === 401 && !originalRequest._retry && retryCounter === MAX_RETRIES) {
-      // Show alert to the user to log in again
-      enqueueSnackbar('Su sesión ha expirado. Por favor, conéctese de nuevo.', { variant: 'error' });
-      window.location.href = '/login';
-    }
-
     return Promise.reject(error);
   }
 );

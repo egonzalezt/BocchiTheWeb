@@ -8,7 +8,7 @@ import Iconify from '../../components/iconify';
 // States
 import useUserStore from '../../stateStore/zustand';
 // Apis
-import AuthApi from '../../services/auth'; // Import the AuthApi
+import KeroAuthApi from '../../services/keroAuth'; // Import the KeroAuthApi
 import UserApi from '../../services/user'; // Import the UserApi/ Import useSnackbar hook
 // ----------------------------------------------------------------------
 
@@ -44,13 +44,13 @@ export default function LoginForm() {
     }
 
     if (isValid) {
-      AuthApi.login({ email, password })
+      KeroAuthApi.login({ email, password })
         .then((response) => {
-          const { accessToken, refreshToken } = response.data;
+          const { accessToken } = response.data;
           localStorage.setItem('accessToken', accessToken);
-          localStorage.setItem('refreshToken', refreshToken);
 
           // Get the user information and save it into Zustand state
+          /*
           UserApi.getUser()
             .then((userResponse) => {
               const user = userResponse.data;
@@ -60,7 +60,18 @@ export default function LoginForm() {
               // Handle error when getting user information
               console.error('Failed to get user information:', error);
             });
+            */
 
+            const userTest = {
+              "FirstName" : "Pepe",
+              "LastName": "Pepe",
+              "PhoneNumber": "Pepe",
+              "Email" : "Pepe@pepe.com",
+              "BankName": "Pepe",
+              "AccountType": "Pepe",
+              "AccountNumber": "Pepe"
+            }
+            setUser(userTest);
           navigate('/dashboard', { replace: true });
         })
         .catch((error) => {
