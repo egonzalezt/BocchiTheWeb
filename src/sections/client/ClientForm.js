@@ -10,6 +10,7 @@ const initialState = {
     name: '',
     nameError: '',
     documentTypeError: '',
+    fileSelectedError: '',
     documentType: '',
     file: null,
     fileBinary: null,
@@ -44,6 +45,7 @@ export default function RegistrationForm({ id }) {
         let isValid = true;
         let nameError = '';
         let documentTypeError = '';
+        let fileSelectedError = '';
 
         if (name.trim() === '') {
             nameError = 'Nombre es requerido';
@@ -59,7 +61,7 @@ export default function RegistrationForm({ id }) {
         }
 
         if (!file) {
-            documentTypeError = 'Debe subir un archivo';
+            fileSelectedError = 'Debe seleccionar un archivo';
             isValid = false;
         }
 
@@ -93,7 +95,8 @@ export default function RegistrationForm({ id }) {
             setFormData((prevData) => ({
                 ...prevData,
                 nameError,
-                documentTypeError
+                documentTypeError,
+                fileSelectedError
             }));
         }
     };
@@ -138,11 +141,17 @@ export default function RegistrationForm({ id }) {
                 setFormData((prevData) => ({
                     ...prevData,
                     file: selectedFile,
-                    documentTypeError: '',
+                    fileSelectedError: '',
                     fileInfo,
                     fileBinary: fileReader.result
                 }));
             };
+        } else {
+            setFormData((prevData) => ({
+                ...prevData,
+                file: null,
+                fileSelectedError: 'Debe seleccionar un archivo'
+            }));
         }
     };
 
@@ -206,6 +215,11 @@ export default function RegistrationForm({ id }) {
                         accept=".pdf,.jpg,.jpeg,.png"
                         onChange={handleFileChange}
                     />
+                    {formData.fileSelectedError && (
+                        <Box sx={{ color: 'red' }}>
+                            <Typography variant="subtitle2">{formData.fileSelectedError}</Typography>
+                        </Box>
+                    )}
                 </Stack>
                 <Box width="40%" sx={{ marginX: 'auto' }}>
                     <LoadingButton

@@ -34,7 +34,22 @@ class CoplandFileManager {
     } catch (error) {
       throw new Error("Error al subir el archivo");
     }
-  }  
+  }
+
+  async getFiles(pageIndex, pageSize) {
+    try {
+      const response = await this.axios.get("/File/get-files", {
+        headers: {
+          pageIndex,
+          pageSize,
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error("Error al obtener los archivos");
+    }
+  }
 }
 
 export default new CoplandFileManager();

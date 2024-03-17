@@ -26,6 +26,7 @@ import {
 import Iconify from '../components/iconify';
 import Scrollbar from '../components/scrollbar';
 import ClientApi from '../services/client';
+import CoplandFileManagerApi from '../services/coplandFileManager';
 // sections
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
 // ----------------------------------------------------------------------
