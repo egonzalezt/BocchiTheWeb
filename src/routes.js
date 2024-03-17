@@ -24,9 +24,8 @@ export default function Router() {
       children: [
         { element: <Navigate to="/dashboard/app" />, index: true },
         { path: 'app', element: <DashboardAppPage /> },
-        { path: 'clientes', element: <ClientsPage /> },
-        { path: 'clientes/editar/:id', element: <AddClientPage/> },
-        { path: 'clientes/new', element: <AddClientPage/> },
+        { path: 'files', element: <ClientsPage /> },
+        { path: 'files/new', element: <AddClientPage/> },
       ],
     },
     {

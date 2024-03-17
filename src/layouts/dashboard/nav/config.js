@@ -12,13 +12,13 @@ const navConfig = [
     icon: icon('ic_analytics'),
   },
   {
-    title: 'clientes',
-    path: '/dashboard/clientes',
+    title: 'Archivos',
+    path: '/dashboard/files',
     icon: icon('ic_user'),
     subItems: [
       {
         title: 'Agregar',
-        path: '/dashboard/clientes/new',
+        path: '/dashboard/files/new',
         icon: icon('ic_plus'),
       }
     ],

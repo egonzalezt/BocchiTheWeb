@@ -1,236 +1,211 @@
 import { useState, useEffect } from 'react';
-import { Stack, TextField, Checkbox, Grid, Box } from '@mui/material';
+import { Stack, TextField, Typography, Box, Select, MenuItem } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import { LoadingButton } from '@mui/lab';
-import ClientApi from '../../services/client';
+import { v4 as uuidv4 } from 'uuid';
+import coplandFileManager from '../../services/coplandFileManager';
+
+const initialState = {
+    name: '',
+    nameError: '',
+    documentTypeError: '',
+    documentType: '',
+    file: null,
+    fileBinary: null,
+    fileInfo: {
+        name: "",
+        nameWithExtension: "",
+        mimeType: "",
+        category: 0
+    },
+    isLoading: false,
+    isSuccess: false,
+    error: null
+};
 
 export default function RegistrationForm({ id }) {
-    const [isLoading, setIsLoading] = useState(false); // Add loading state
-    const [isSuccess, setIsSuccess] = useState(false); // Add success state
-    const [error, setError] = useState(null); // Add error state
-
-    const [nit, setNit] = useState('');
-    const [name, setName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [email, setEmail] = useState('');
-    const [originalEmail, setOriginalEmail] = useState('');
-    const [naturalPerson, setNaturalPerson] = useState(true);
-
-    const [nitError, setNitError] = useState('');
-    const [nameError, setNameError] = useState('');
-    const [lastNameError, setLastNameError] = useState('');
-    const [emailError, setEmailError] = useState('');
-    const [isEmailTaken, setIsEmailTaken] = useState(false);
-
-    useEffect(() => {
-        const fetchClient = async () => {
-            try {
-                const response = await ClientApi.getClientById(id);
-                const { data } = response;
-                setNit(data.nit || '');
-                setName(data.name || '');
-                setLastName(data.lastName || '');
-                setEmail(data.email || '');
-                setOriginalEmail(data.email || '');
-                setNaturalPerson(data.naturalPerson || true);
-            } catch (error) {
-                console.error('Error fetching client:', error);
-            }
-        };
-
-        if (id) {
-            fetchClient();
-        }
-    }, [id]);
+    const [formData, setFormData] = useState(initialState);
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            setIsSuccess(false);
-        }, 10000); // 20 seconds
+            setFormData((prevData) => ({
+                ...prevData,
+                isSuccess: false,
+                error: null
+            }));
+        }, 10000);
 
         return () => clearTimeout(timeout);
-    }, [isSuccess]);
-
-    const handleEmailBlur = async () => {
-        if (email.trim() !== '' && originalEmail !== email) {
-            try {
-                const { data: emailExists } = await ClientApi.checkEmailExistence(email);
-
-                if (emailExists) {
-                    setEmailError('El correo ingresado ya existe');
-                    setIsEmailTaken(true);
-                } else {
-                    setEmailError('');
-                    setIsEmailTaken(false);
-                }
-            } catch (error) {
-                console.error('Failed to check email existence:', error);
-            }
-        } else {
-            setEmailError('');
-            setIsEmailTaken(false);
-        }
-    };
+    }, [formData.isSuccess]);
 
     const handleSubmit = async () => {
-        // Reset validation errors
-        setNitError('');
-        setNameError('');
-        setLastNameError('');
-        setEmailError('');
-
-        // Validate form fields
+        const { name, documentType, file, fileInfo } = formData;
         let isValid = true;
-
-        // Perform validation and submit the form data
+        let nameError = '';
+        let documentTypeError = '';
 
         if (name.trim() === '') {
-            setNameError('Nombre es requerido');
+            nameError = 'Nombre es requerido';
             isValid = false;
-        } else if (name.length > 100) {
-            setNameError('Nombre no debe exceder los 100 caracteres');
-            isValid = false;
-        }
-
-        if (lastName.trim() === '') {
-            setLastNameError('Apellidos es requerido');
-            isValid = false;
-        } else if (lastName.length > 100) {
-            setLastNameError('Apellidos no deben exceder los 100 caracteres');
+        } else if (name.length > 50) {
+            nameError = 'Nombre no debe exceder los 50 caracteres';
             isValid = false;
         }
 
-        if (isEmailTaken) {
-            setEmailError('El correo ingresado ya existe');
-            isValid = false;
-        }
-        else if (email.trim() === '') {
-            setEmailError('Correo electrónico es requerido');
-            isValid = false;
-        } else if (!isValidEmail(email)) {
-            setEmailError('Correo electrónico inválido');
+        if (documentType.trim() === '') {
+            documentTypeError = 'Debe seleccionar una categoría';
             isValid = false;
         }
 
-        if (!naturalPerson && nit.trim() === '') {
-            setNitError('Nit es requerido');
+        if (!file) {
+            documentTypeError = 'Debe subir un archivo';
             isValid = false;
         }
 
         if (isValid) {
-            setIsLoading(true); // Set loading state to true
+            setFormData((prevData) => ({
+                ...prevData,
+                isLoading: true
+            }));
 
             try {
-                // Create an object with the form data
-                const formData = {
-                    nit: naturalPerson ? nit : null,
+                const categoryValue = mapCategoryValue(documentType);
+                const dataToSend = {
                     name,
-                    lastName,
-                    email,
-                    naturalPerson,
+                    nameWithExtension: fileInfo.nameWithExtension,
+                    mimeType: fileInfo.mimeType,
+                    category: categoryValue
                 };
-
-                if (id) {
-                    await ClientApi.updateClient(id, formData)
-                } else {
-                    await ClientApi.addClient(formData)
-                }
-
-                // Reset the form
-                setIsLoading(false); // Set loading state to false
-                setIsSuccess(true); // Set success state to true
+                const signedUrlResponse = await coplandFileManager.uploadFileSignedUrl(dataToSend);
+                await coplandFileManager.uploadFile(signedUrlResponse.content.url, fileInfo.mimeType, formData.file);
+                setFormData(initialState);
             } catch (error) {
-                setIsLoading(false); // Set loading state to false
-                setIsSuccess(false); // Set success state to false
-                setError(
-                    error.response?.data?.message ||
-                    'Fallo el registro, valide si posee algun error en los campos e intente nuevamente.'
-                ); // Set error message from the response
-                console.log(error)
+                setFormData((prevData) => ({
+                    ...prevData,
+                    isLoading: false,
+                    isSuccess: false,
+                    error: 'Ocurrió un error al realizar la operación. Por favor, inténtalo de nuevo más tarde.'
+                }));
+                console.log(error);
             }
+        } else {
+            setFormData((prevData) => ({
+                ...prevData,
+                nameError,
+                documentTypeError
+            }));
         }
     };
 
-    const isValidEmail = (email) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
+    const mapCategoryValue = (categoryName) => {
+        switch (categoryName) {
+            case 'Identity':
+                return 0;
+            case 'Health':
+                return 1;
+            case 'Study':
+                return 2;
+            case 'Living':
+                return 3;
+            case 'Default':
+                return 4;
+            default:
+                return 0;
+        }
+    };
+
+    const handleDocumentTypeChange = (e) => {
+        setFormData((prevData) => ({
+            ...prevData,
+            documentType: e.target.value,
+            documentTypeError: ''
+        }));
+    };
+
+    const handleFileChange = (e) => {
+        const selectedFile = e.target.files[0];
+        if (selectedFile) {
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(selectedFile);
+            fileReader.onload = () => {
+                const fileInfo = {
+                    name: selectedFile.name,
+                    nameWithExtension: `${uuidv4()}.${selectedFile.name.split('.').pop()}`,
+                    mimeType: selectedFile.type,
+                    category: 0
+                };
+                setFormData((prevData) => ({
+                    ...prevData,
+                    file: selectedFile,
+                    documentTypeError: '',
+                    fileInfo,
+                    fileBinary: fileReader.result
+                }));
+            };
+        }
     };
 
     return (
         <form onSubmit={handleSubmit}>
             <Box width="60%" sx={{ marginX: 'auto' }}>
                 <Stack spacing={3}>
-                    {isSuccess && (
+                    {formData.isSuccess && (
                         <Alert severity="success">
                             <AlertTitle>
-                                {id ? "Cliente editado con éxito" : "Registro efectuado con éxito"}
+                                {id ? "Archivo editado con éxito" : "Registro efectuado con éxito"}
                             </AlertTitle>
-                            {id ? "El cliente se ha editado de forma exitosa con los nuevos valores" :
-                                "El cliente se a registrado de forma exitosa, ahora podra genera facturas o cotizaciones al cliente"
+                            {id ? "El Archivo se ha editado de forma exitosa con los nuevos valores" :
+                                "El Archivo se a registrado de forma exitosa"
                             }
                         </Alert>
                     )}
 
-                    {!isSuccess && error && (
+                    {!formData.isSuccess && formData.error && (
                         <Alert severity="error">
-                            <AlertTitle>Registro fallido</AlertTitle>
-                            {error}
+                            <AlertTitle>Error</AlertTitle>
+                            {formData.error}
                         </Alert>
                     )}
-
-                    <Grid container alignItems="center">
-                        <Grid item xs={12}>
-                            <Checkbox
-                                name="naturalPerson"
-                                checked={naturalPerson}
-                                onChange={(e) => setNaturalPerson(e.target.checked)}
-                            />
-                            Persona Natural
-                        </Grid>
-                    </Grid>
 
                     <TextField
                         name="name"
                         label="Nombre"
                         fullWidth
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        error={!!nameError}
-                        helperText={nameError}
-                    />
-                    <TextField
-                        name="lastName"
-                        label="Apellidos"
-                        fullWidth
-                        value={lastName}
-                        onChange={(e) => setLastName(e.target.value)}
-                        error={!!lastNameError}
-                        helperText={lastNameError}
+                        value={formData.name}
+                        onChange={(e) => setFormData((prevData) => ({ ...prevData, name: e.target.value, nameError: '' }))}
+                        error={!!formData.nameError}
+                        helperText={formData.nameError}
                     />
 
-                    <TextField
-                        name="email"
-                        label="Correo electrónico"
+                    <Typography variant="subtitle1">Tipo de Documento</Typography>
+                    <Select
+                        value={formData.documentType}
+                        onChange={handleDocumentTypeChange}
+                        label="Tipo de Documento"
+                        error={!!formData.documentTypeError}
+                        helperText={formData.documentTypeError}
                         fullWidth
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        onBlur={handleEmailBlur}
-                        error={!!emailError}
-                        helperText={emailError}
-                    />
+                    >
+                        <MenuItem value="">Seleccionar</MenuItem>
+                        <MenuItem value="Identity">Identidad</MenuItem>
+                        <MenuItem value="Health">Salud</MenuItem>
+                        <MenuItem value="Study">Estudio</MenuItem>
+                        <MenuItem value="Living">Vivienda</MenuItem>
+                        <MenuItem value="Default">Por defecto</MenuItem>
+                    </Select>
 
-                    {!naturalPerson && (
-                        <TextField
-                            name="nit"
-                            label="NIT"
-                            fullWidth
-                            value={nit}
-                            onChange={(e) => setNit(e.target.value)}
-                            error={!!nitError}
-                            helperText={nitError}
-                        />
+                    {formData.documentTypeError && (
+                        <Box sx={{ color: 'red' }}>
+                            <Typography variant="subtitle2">{formData.documentTypeError}</Typography>
+                        </Box>
                     )}
+
+                    <input
+                        type="file"
+                        accept=".pdf,.jpg,.jpeg,.png"
+                        onChange={handleFileChange}
+                    />
                 </Stack>
                 <Box width="40%" sx={{ marginX: 'auto' }}>
                     <LoadingButton
@@ -239,9 +214,9 @@ export default function RegistrationForm({ id }) {
                         size="large"
                         variant="contained"
                         onClick={handleSubmit}
-                        loading={isLoading} // Set the loading state of the button
+                        loading={formData.isLoading}
                     >
-                        {id ? 'Actualizar cliente' : 'Registrar cliente'}
+                        {id ? 'Actualizar archivo' : 'Registrar archivo'}
                     </LoadingButton>
                 </Box>
             </Box>

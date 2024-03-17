@@ -16,7 +16,7 @@ export default function AddClientPage(props) {
 
       <Container maxWidth="xl">
         <Typography variant="h4" sx={{ mb: 5 }}>
-          {id? "Editar cliente":"Registrar cliente"}
+          {id? "Editar archivo":"Registrar archivo"}
         </Typography>
 
         <ClientForm id={id} />

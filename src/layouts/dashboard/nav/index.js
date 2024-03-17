@@ -54,8 +54,10 @@ export default function Nav({ openNav, onCloseNav }) {
         '& .simplebar-content': { height: 1, display: 'flex', flexDirection: 'column' },
       }}
     >
-      <Box sx={{ px: 2.5, py: 3, display: 'inline-flex' }}>
+      <Box sx={{ px: 2.5, py: 3, display: 'inline-flex', alignItems: 'center' }}>
         <Logo />
+        <Typography variant="subtitle1" sx={{ color: 'black', ml: 1 }}>Agile</Typography>
+        <Typography variant="subtitle1" sx={{ color: 'blue' }}>Developers</Typography>
       </Box>
 
       <Box sx={{ mb: 5, mx: 2.5 }}>

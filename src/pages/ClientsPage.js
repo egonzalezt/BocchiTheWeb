@@ -170,19 +170,19 @@ export default function UserPage() {
   return (
     <>
       <Helmet>
-        <title>Clientes | AgileDevs</title>
+        <title>Archivos | AgileDevs</title>
       </Helmet>
 
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Clientes
+            Archivos
           </Typography>
           <Button variant="contained" 
             startIcon={<Iconify icon="eva:plus-fill" />}
-            onClick={() => navigate(`/dashboard/clientes/new`)}
+            onClick={() => navigate(`/dashboard/files/new`)}
           >
-            Nuevo Cliente
+            Nuevo Archivo
           </Button>
         </Stack>
 
