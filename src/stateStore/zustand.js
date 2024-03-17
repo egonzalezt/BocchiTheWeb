@@ -20,10 +20,11 @@ const useUserStore = create((set) => ({
         const { name } = payload;
         set({ user: { name } });
       } else {
-        console.error('Access token not found in localStorage.');
+        window.location.href = '/'; 
+        return;
       }
     } catch (error) {
-      console.error('Failed to fetch user information:', error);
+      window.location.href = '/'; 
     }
   },
   setUser: (user) => set({ user }),

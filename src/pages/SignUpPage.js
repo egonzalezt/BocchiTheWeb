@@ -53,13 +53,15 @@ export default function SignUpPage() {
   return (
     <>
       <Helmet>
-        <title> Registro | WilPc </title>
+        <title> Registro | AgileDevs </title>
       </Helmet>
 
       <StyledRoot>
         <Logo
           sx={{
             position: 'fixed',
+            width: 100,
+            height: 100,
             top: { xs: 16, sm: 24, md: 40 },
             left: { xs: 16, sm: 24, md: 40 },
           }}
@@ -70,7 +72,7 @@ export default function SignUpPage() {
             <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
               Hola, bienvenido
             </Typography>
-            <img src="/assets/illustrations/illustration_login.svg" alt="login" />
+            <img src="/assets/illustrations/illustration_login.png" alt="login" />
           </StyledSection>
         )}
 

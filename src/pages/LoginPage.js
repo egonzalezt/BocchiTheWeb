@@ -52,7 +52,7 @@ export default function LoginPage() {
   return (
     <>
       <Helmet>
-        <title> Login | WilPc </title>
+        <title> Login | AgileDevs </title>
       </Helmet>
 
       <StyledRoot>
@@ -69,7 +69,7 @@ export default function LoginPage() {
             <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
               Hola, bienvenido de nuevo
             </Typography>
-            <img src="/assets/illustrations/illustration_login.svg" alt="login" />
+            <img src="/assets/illustrations/illustration_login.png" alt="login" />
           </StyledSection>
         )}
 

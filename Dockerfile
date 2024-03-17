@@ -1,5 +1,5 @@
 # Stage 1: Build the React application
-FROM node:18-alpine3.18 AS builder
+FROM node:18-slim AS builder
 
 # Set working directory
 WORKDIR /app
@@ -25,6 +25,9 @@ RUN rm -rf ./*
 
 # Copy the built React application from the builder stage
 COPY --from=builder /app/build .
+
+# Copy nginx configuration
 COPY nginx.conf /etc/nginx/nginx.conf
+
 # Set the default command to start nginx and serve the application
 CMD ["nginx", "-g", "daemon off;"]

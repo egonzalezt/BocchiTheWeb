@@ -12,6 +12,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
 import ToggleColorMode from './ToggleColorMode';
+import Logo from '../../../components/logo';
 
 function AppAppBar({ mode, toggleColorMode }) {
   const [open, setOpen] = React.useState(false);
@@ -84,18 +85,15 @@ function AppAppBar({ mode, toggleColorMode }) {
                 px: 0,
               }}
             >
-              <img
-                src={
-                  '/assets/logo.svg'
-                }
-                style={{
-                  width: '100px',
-                  height: 'auto',
+              <Logo
+                sx={{
+                  width: 100,
+                  height: 100,
                   cursor: 'pointer',
                   filter: mode === 'light' ? 'invert(0%)' : 'invert(100%)',
                 }}
-                alt="logo of sitemark"
               />
+
               <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                 <MenuItem
                   onClick={() => scrollToSection('features')}
