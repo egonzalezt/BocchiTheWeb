@@ -1,7 +1,7 @@
 import { enqueueSnackbar } from 'notistack'; // Import enqueueSnackbar
 import axios from 'axios';
 
-const baseUrl = process.env.REACT_APP_API_BASE_URL;
+const baseUrl = "https://stands-gw-di2h7zbs.uk.gateway.dev/";
 const axiosInstance = axios.create({
   baseURL: baseUrl,
   headers: {
@@ -48,10 +48,10 @@ axiosInstance.interceptors.response.use(
           return axiosInstance(originalRequest);
         })
         .catch(() => {
-          // If token verification fails, redirect to the login page
-          enqueueSnackbar('La sesión ha expirado, por favor conéctese de nuevo.', { variant: 'error' });
+          localStorage.removeItem('accessToken')
           redirectToLogin();
-          return Promise.reject(error); // Reject the promise chain
+          enqueueSnackbar('La sesión ha expirado, por favor conéctese de nuevo.', { variant: 'error' });
+          return Promise.reject(error);
         });
     }
     return Promise.reject(error);

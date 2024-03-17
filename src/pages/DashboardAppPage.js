@@ -26,7 +26,7 @@ export default function DashboardAppPage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard | WilPc </title>
+        <title> Dashboard | AgileDevs </title>
       </Helmet>
 
       <Container maxWidth="xl">

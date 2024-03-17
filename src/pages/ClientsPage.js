@@ -170,7 +170,7 @@ export default function UserPage() {
   return (
     <>
       <Helmet>
-        <title>Clientes | WilPc</title>
+        <title>Clientes | AgileDevs</title>
       </Helmet>
 
       <Container>

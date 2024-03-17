@@ -11,7 +11,7 @@ export default function AddClientPage(props) {
   return (
     <>
       <Helmet>
-        <title> Dashboard | WilPc </title>
+        <title> Dashboard | AgileDevs </title>
       </Helmet>
 
       <Container maxWidth="xl">
