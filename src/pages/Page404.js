@@ -22,7 +22,7 @@ export default function Page404() {
   return (
     <>
       <Helmet>
-        <title> 404 Page Not Found | WilPc </title>
+        <title> 404 Page Not Found | AgileDevs </title>
       </Helmet>
 
       <Container>
@@ -38,7 +38,7 @@ export default function Page404() {
 
           <Box
             component="img"
-            src="/assets/illustrations/illustration_404_2.svg"
+            src="/assets/illustrations/bocchi404.png"
             sx={{ height: 260, mx: 'auto', my: { xs: 5, sm: 10 } }}
           />
 

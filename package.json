@@ -1,8 +1,8 @@
 {
-  "name": "@minimal/material-kit-react",
-  "author": "minimals.cc",
+  "name": "bocchitheweb",
+  "author": "vasitos.org",
   "licence": "MIT",
-  "version": "1.7.0",
+  "version": "1.0.0",
   "private": false,
   "scripts": {
     "start": "react-scripts start",
