@@ -8,6 +8,12 @@ class KeroAuthApi {
   login(userLoginDto) {
     return this.axios.post("/auth/login", userLoginDto);
   }
+
+  validateToken() {
+    return this.axios.get(`/auth/validate-token`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
+    });
+  }
 }
 
 export default new KeroAuthApi();
