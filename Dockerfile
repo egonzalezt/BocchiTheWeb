@@ -17,6 +17,8 @@ RUN npm run build
 # Stage 2: Serve the built React application with nginx
 FROM nginx:1.21.6
 
+COPY ./nginx.conf /etc/nginx/nginx.conf
+
 # Set working directory to nginx resources directory
 WORKDIR /usr/share/nginx/html
 
