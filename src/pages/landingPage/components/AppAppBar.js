@@ -13,14 +13,15 @@ import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
 import ToggleColorMode from './ToggleColorMode';
 
-const logoStyle = {
-  width: '140px',
-  height: 'auto',
-  cursor: 'pointer',
-};
-
 function AppAppBar({ mode, toggleColorMode }) {
   const [open, setOpen] = React.useState(false);
+  const [tokenExists, setTokenExists] = React.useState(false); // State to track if token exists
+
+  React.useEffect(() => {
+    // Check if token exists in localStorage
+    const accessToken = localStorage.getItem('accessToken');
+    setTokenExists(!!accessToken); // Update tokenExists state based on the existence of accessToken
+  }, []);
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
@@ -85,9 +86,14 @@ function AppAppBar({ mode, toggleColorMode }) {
             >
               <img
                 src={
-                  'https://assets-global.website-files.com/61ed56ae9da9fd7e0ef0a967/61f12e6faf73568658154dae_SitemarkDefault.svg'
+                  '/assets/logo.svg'
                 }
-                style={logoStyle}
+                style={{
+                  width: '100px',
+                  height: 'auto',
+                  cursor: 'pointer',
+                  filter: mode === 'light' ? 'invert(0%)' : 'invert(100%)',
+                }}
                 alt="logo of sitemark"
               />
               <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
@@ -117,26 +123,39 @@ function AppAppBar({ mode, toggleColorMode }) {
               }}
             >
               <ToggleColorMode mode={mode} toggleColorMode={toggleColorMode} />
-              <Button
-                color="primary"
-                variant="text"
-                size="small"
-                component="a"
-                href="/login"
-                target="_blank"
-              >
-                Sign in
-              </Button>
-              <Button
-                color="primary"
-                variant="contained"
-                size="small"
-                component="a"
-                href="/signup"
-                target="_blank"
-              >
-                Sign up
-              </Button>
+              {tokenExists ? (
+                <Button
+                  color="primary"
+                  variant="contained"
+                  size="small"
+                  href="/dashboard"
+                  >
+                  Dashboard
+                </Button>
+              ) : (
+                <>
+                  <Button
+                    color="primary"
+                    variant="text"
+                    size="small"
+                    component="a"
+                    href="/login"
+                    target="_blank"
+                  >
+                    Sign in
+                  </Button>
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    size="small"
+                    component="a"
+                    href="/signup"
+                    target="_blank"
+                  >
+                    Sign up
+                  </Button>
+                </>
+              )}
             </Box>
             <Box sx={{ display: { sm: '', md: 'none' } }}>
               <Button
@@ -182,16 +201,27 @@ function AppAppBar({ mode, toggleColorMode }) {
                   <MenuItem onClick={() => scrollToSection('faq')}>FAQ</MenuItem>
                   <Divider />
                   <MenuItem>
-                    <Button
-                      color="primary"
-                      variant="contained"
-                      component="a"
-                      href="/signup"
-                      target="_blank"
-                      sx={{ width: '100%' }}
-                    >
-                      Sign up
-                    </Button>
+                    {tokenExists ? (
+                      <Button
+                        color="primary"
+                        variant="contained"
+                        sx={{ width: '100%' }}
+                        href="/dashboard"
+                      >
+                        Dashboard
+                      </Button>
+                    ) : (
+                      <Button
+                        color="primary"
+                        variant="contained"
+                        component="a"
+                        href="/signup"
+                        target="_blank"
+                        sx={{ width: '100%' }}
+                      >
+                        Sign up
+                      </Button>
+                    )}
                   </MenuItem>
                   <MenuItem>
                     <Button

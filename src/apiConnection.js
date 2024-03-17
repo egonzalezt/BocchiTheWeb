@@ -1,7 +1,7 @@
-import { enqueueSnackbar } from 'notistack';
+import { enqueueSnackbar } from 'notistack'; // Import enqueueSnackbar
 import axios from 'axios';
 
-const baseUrl = 'http://localhost:5295/';
+const baseUrl = process.env.REACT_APP_API_BASE_URL;
 const axiosInstance = axios.create({
   baseURL: baseUrl,
   headers: {
@@ -9,19 +9,18 @@ const axiosInstance = axios.create({
   },
 });
 
-// Función para redirigir al usuario al inicio de sesión
+// Function to redirect the user to the login page
 const redirectToLogin = () => {
   window.location.href = '/login';
 };
 
-// Add a request interceptor
+// Add a request interceptor to handle CORS
 axiosInstance.interceptors.request.use(
   (config) => {
     // Modify the request config to include CORS headers
-    config.headers['Access-Control-Allow-Origin'] = 'http://localhost:5295';
+    config.headers['Access-Control-Allow-Origin'] = '*';
     config.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE';
     config.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization';
-
     return config;
   },
   (error) => {
@@ -29,14 +28,14 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-// Add a response interceptor
+// Add a response interceptor to handle authentication errors
 axiosInstance.interceptors.response.use(
   (response) => {
     return response;
   },
   (error) => {
     const originalRequest = error.config;
-    // Check if error response status is 401 (Unauthorized) and redirect to login page if so
+    // Check if the error response status is 401 (Unauthorized) and redirect to the login page if so
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       return axiosInstance.post('/auth/validate-token', null, {
@@ -45,13 +44,14 @@ axiosInstance.interceptors.response.use(
         },
       })
         .then((res) => {
-          // If token is verified, retry original request
+          // If the token is verified, retry the original request
           return axiosInstance(originalRequest);
         })
         .catch(() => {
-          // If token verification fails, redirect to login page
+          // If token verification fails, redirect to the login page
           enqueueSnackbar('La sesión ha expirado, por favor conéctese de nuevo.', { variant: 'error' });
           redirectToLogin();
+          return Promise.reject(error); // Reject the promise chain
         });
     }
     return Promise.reject(error);
