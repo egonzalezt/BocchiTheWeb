@@ -11,7 +11,6 @@ export default function DocumentViewPage() {
     const [documentUrl, setDocumentUrl] = useState('');
     const [loading, setLoading] = useState(true);
     const fileId = new URLSearchParams(location.search).get('id');
-    const [errorCount, setErrorCount] = useState(0); // Contador de errores
 
     useEffect(() => {
         const fetchDocumentUrl = async () => {
@@ -44,7 +43,7 @@ export default function DocumentViewPage() {
             enqueueSnackbar('No se ha especificado un identificador de archivo', { variant: 'error' });
             navigate('/dashboard/files/');
         }
-    }, [fileId, documentUrl, navigate, errorCount]); // Agregar errorCount a las dependencias
+    }, [fileId, documentUrl, navigate]);
 
     return (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', flexDirection: 'column' }}>

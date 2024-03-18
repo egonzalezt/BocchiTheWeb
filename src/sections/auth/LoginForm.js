@@ -5,16 +5,12 @@ import { Link, Stack, IconButton, InputAdornment, TextField, Alert, AlertTitle }
 import { LoadingButton } from '@mui/lab';
 // components
 import Iconify from '../../components/iconify';
-// States
-import useUserStore from '../../stateStore/zustand';
 // Apis
 import KeroAuthApi from '../../services/keroAuth'; // Import the KeroAuthApi
-import UserApi from '../../services/user'; // Import the UserApi/ Import useSnackbar hook
 // ----------------------------------------------------------------------
 
 export default function LoginForm() {
   const navigate = useNavigate();
-  const setUser = useUserStore((state) => state.setUser);
 
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
@@ -48,33 +44,9 @@ export default function LoginForm() {
         .then((response) => {
           const { accessToken } = response.data;
           localStorage.setItem('accessToken', accessToken);
-
-          // Get the user information and save it into Zustand state
-          /*
-          UserApi.getUser()
-            .then((userResponse) => {
-              const user = userResponse.data;
-              setUser(user);
-            })
-            .catch((error) => {
-              // Handle error when getting user information
-              console.error('Failed to get user information:', error);
-            });
-            */
-
-            const userTest = {
-              "FirstName" : "Pepe",
-              "LastName": "Pepe",
-              "PhoneNumber": "Pepe",
-              "Email" : "Pepe@pepe.com",
-              "BankName": "Pepe",
-              "AccountType": "Pepe",
-              "AccountNumber": "Pepe"
-            }
-            setUser(userTest);
           navigate('/dashboard', { replace: true });
         })
-        .catch((error) => {
+        .catch(() => {
           setLoginError('Credenciales inválidas. Por favor, verifique su correo electrónico y contraseña.');
         });
     }
@@ -83,6 +55,10 @@ export default function LoginForm() {
   const isValidEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
+  };
+
+  const handleForgotPasswordClick = () => {
+    navigate('/passwordReset'); // Redirige a la página de restablecimiento de contraseña
   };
 
   return (
@@ -127,8 +103,7 @@ export default function LoginForm() {
       )}
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
-        {/* <Checkbox name="remember" label="Remember me" /> */}
-        <Link variant="subtitle2" underline="hover">
+        <Link variant="subtitle2" underline="hover" onClick={handleForgotPasswordClick}>
           ¿Ha olvidado su contraseña?
         </Link>
       </Stack>

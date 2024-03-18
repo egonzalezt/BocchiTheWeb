@@ -2,11 +2,15 @@ import axios from "../apiConnection";
 
 class KeroAuthApi {
   constructor() {
-    this.axios = axios; // Store the axios instance in a class property
+    this.axios = axios;
   }
 
   login(userLoginDto) {
     return this.axios.post("/auth/login", userLoginDto);
+  }
+
+  requestPasswordReset(userLoginDto) {
+    return this.axios.post("/auth/change-password", userLoginDto);
   }
 
   validateToken() {
