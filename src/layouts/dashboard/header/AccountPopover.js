@@ -1,18 +1,10 @@
 import { useState } from 'react';
-// @mui
+import { Link } from 'react-router-dom';
 import { alpha } from '@mui/material/styles';
 import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton, Popover } from '@mui/material';
-// states
-import { Link } from 'react-router-dom';
 import useUserStore from '../../../stateStore/zustand';
-// ----------------------------------------------------------------------
 
 const MENU_OPTIONS = [
-  {
-    label: 'Home',
-    icon: 'eva:home-fill',
-    destination: '/dashboard/app'
-  },
   {
     label: 'Archivos',
     icon: 'eva:person-fill',
@@ -25,8 +17,6 @@ const MENU_OPTIONS = [
   },
 ];
 
-// ----------------------------------------------------------------------
-
 export default function AccountPopover() {
   const [open, setOpen] = useState(null);
   const user = useUserStore((state) => state.user);
@@ -37,6 +27,10 @@ export default function AccountPopover() {
 
   const handleClose = () => {
     setOpen(null);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('accessToken');
   };
 
   return (
@@ -82,10 +76,7 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle2" noWrap>
-            {user.firstName} {user.lastName}
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {user.email}
+            {user.name}
           </Typography>
         </Box>
 
@@ -102,9 +93,11 @@ export default function AccountPopover() {
         </Stack>
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        <MenuItem onClick={handleClose} sx={{ m: 1 }}>
-          Logout
-        </MenuItem>
+        <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }} onClick={handleLogout}>
+          <MenuItem sx={{ m: 1 }}>
+            Cerrar de sesión
+          </MenuItem>
+        </Link>
       </Popover>
     </>
   );
