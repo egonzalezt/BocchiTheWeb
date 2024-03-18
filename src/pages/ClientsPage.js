@@ -2,7 +2,6 @@ import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-// @mui
 import {
   Card,
   Table,
@@ -20,14 +19,12 @@ import {
   IconButton,
   TableContainer,
   TablePagination,
+  CircularProgress // Importación del CircularProgress para el indicador de carga
 } from '@mui/material';
-// components
 import Iconify from '../components/iconify';
 import Scrollbar from '../components/scrollbar';
 import CoplandFileManagerApi from '../services/coplandFileManager';
-// sections
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
-// ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Nombre', alignRight: false },
@@ -36,10 +33,7 @@ const TABLE_HEAD = [
   { id: 'uploadTime', label: 'Fecha de creación', alignRight: false },
   { id: 'view', label: 'Ver archivo', alignRight: true },
   { id: '' },
-
 ];
-
-// ----------------------------------------------------------------------
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -83,9 +77,11 @@ export default function UserPage() {
   const [clients, setClients] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const [currentUserId, setCurrentUserId] = useState(null);
+  const [loading, setLoading] = useState(false); // Estado para controlar la carga
 
   const fetchClients = async (page, pageSize) => {
     try {
+      setLoading(true); // Activar la carga antes de la solicitud
       const response = await CoplandFileManagerApi.getFiles(page, pageSize);
       const { data, headers } = response;
       const { 'x-pagination-total-pages': total, 'x-pagination-has-next-page': hasNext } = headers;
@@ -97,6 +93,8 @@ export default function UserPage() {
       setClients(data);
     } catch (error) {
       console.error('Error fetching clients:', error);
+    } finally {
+      setLoading(false); // Desactivar la carga después de la solicitud (tanto en éxito como en error)
     }
   };
 
@@ -335,6 +333,12 @@ export default function UserPage() {
           Eliminar
         </MenuItem>
       </Popover>
+
+      {loading && ( // Mostrar indicador de carga si loading es verdadero
+        <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+          <CircularProgress />
+        </div>
+      )}
     </>
   );
 }

@@ -11,6 +11,7 @@ import Page404 from './pages/Page404';
 import DashboardAppPage from './pages/DashboardAppPage';
 import AddClientPage from './pages/AddClientPage'
 import ViewDocument from './pages/viewDocuments'
+import PasswordReset from './pages/PasswordReset'
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -33,6 +34,10 @@ export default function Router() {
     {
       path: 'login',
       element: <LoginPage />,
+    },
+    {
+      path: 'passwordReset',
+      element: <PasswordReset />,
     },
     {
       path: 'signup',
