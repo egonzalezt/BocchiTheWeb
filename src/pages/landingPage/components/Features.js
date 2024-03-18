@@ -18,25 +18,25 @@ const items = [
     icon: <ViewQuiltRoundedIcon />,
     title: 'Dashboard',
     description:
-      'This item could provide a snapshot of the most important metrics or data points related to the product.',
-    imageLight: 'url("https://cdn.discordapp.com/attachments/678442358014083103/1216981002073673848/utUT2DU.png?ex=66025ce1&is=65efe7e1&hm=f6253cd0c003e4d29af57dd0ba5209f8938e18565c8ef4ba587e962a5f5a98bc&")',
-    imageDark: 'url("/static/images/templates/templates-images/dash-dark.png")',
+      'El dashboard proporciona a los usuarios una interfaz centralizada desde la cual gestionar sus archivos de manera eficiente.',
+    imageLight: 'url("/assets/illustrations/dashboard.png")',
+    imageDark: 'url("/assets/illustrations/dashboard.png")',
   },
   {
     icon: <EdgesensorHighRoundedIcon />,
-    title: 'Mobile integration',
+    title: 'Gestión de Documentos Personales',
     description:
-      'This item could provide information about the mobile app version of the product.',
-    imageLight: 'url("https://cdn.discordapp.com/attachments/678442358014083103/1217681352707539015/KirbDark.png?ex=6604e921&is=65f27421&hm=5f13ce9c7994295028fe3e87b8839053751c86b50e1dbd7bfbda14b0eaf876db&")',
-    imageDark: 'url("/static/images/templates/templates-images/mobile-dark.png")',
+      'Ofrece a los usuarios la capacidad de gestionar sus documentos personales de forma organizada y accesible. Desde facturas hasta recibos y documentos de identidad, los usuarios pueden almacenar, organizar y acceder fácilmente a sus archivos personales desde una única plataforma centralizada.',
+    imageLight: 'url("/assets/illustrations/personalFiles.png")',
+    imageDark: 'url("/assets/illustrations/personalFiles.png")',
   },
   {
     icon: <DevicesRoundedIcon />,
-    title: 'Available on all platforms',
+    title: 'Compartir Archivos',
     description:
-      'This item could let users know the product is available on all platforms, such as web, mobile, and desktop.',
-    imageLight: 'url("https://cdn.discordapp.com/attachments/678442358014083103/1217681550364119081/chainner_a9qnkbmflp981.jpg?ex=6604e951&is=65f27451&hm=b3f17a5ed813aed90afb6a4da90bf5309a517b55ac364539dee9ee4ef7fd4eaf&")',
-    imageDark: 'url("/static/images/templates/templates-images/devices-dark.png")',
+      'Permite a los usuarios compartir archivos con entidades públicas y privadas de manera segura y eficiente.',
+    imageLight: 'url("/assets/illustrations/fileShare.png")',
+    imageDark: 'url("/assets/illustrations/fileShare.png")',
   },
 ];
 
@@ -55,7 +55,7 @@ export default function Features() {
         <Grid item xs={12} md={6}>
           <div>
             <Typography component="h2" variant="h4" color="text.primary">
-              Product features
+              Características del producto
             </Typography>
             <Typography
               variant="body1"

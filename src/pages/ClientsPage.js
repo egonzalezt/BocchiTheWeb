@@ -8,7 +8,6 @@ import {
   Table,
   Stack,
   Paper,
-  Avatar,
   Button,
   Popover,
   Checkbox,
@@ -25,7 +24,6 @@ import {
 // components
 import Iconify from '../components/iconify';
 import Scrollbar from '../components/scrollbar';
-import ClientApi from '../services/client';
 import CoplandFileManagerApi from '../services/coplandFileManager';
 // sections
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
@@ -33,9 +31,12 @@ import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Nombre', alignRight: false },
-  { id: 'email', label: 'Correo', alignRight: false },
-  { id: 'naturalPerson', label: 'Tipo de cliente', alignRight: false },
+  { id: 'format', label: 'Formato', alignRight: false },
+  { id: 'category', label: 'Categoria', alignRight: false },
+  { id: 'uploadTime', label: 'Fecha de creación', alignRight: false },
+  { id: 'view', label: 'Ver archivo', alignRight: true },
   { id: '' },
+
 ];
 
 // ----------------------------------------------------------------------
@@ -85,22 +86,22 @@ export default function UserPage() {
 
   const fetchClients = async (page, pageSize) => {
     try {
-      console.log(`Getting data from page ${page}`)
-      const response = await ClientApi.getClientsWithPagination(page, pageSize);
-      const { data, headers } = response; // Assuming the response contains the client data and pagination headers
-
-      const { 'x-pagination-total-pages': total } = headers; // Retrieve the total number of pages from the response headers
-      setTotalPages(parseInt(total, 10)); // Update the total number of pages in the state
-
-      setClients(data); // Update the clients data in the state
+      const response = await CoplandFileManagerApi.getFiles(page, pageSize);
+      const { data, headers } = response;
+      const { 'x-pagination-total-pages': total, 'x-pagination-has-next-page': hasNext } = headers;
+      if (hasNext) {
+        setTotalPages(total);
+      } else {
+        setTotalPages(1);
+      }
+      setClients(data);
     } catch (error) {
-      // Handle any errors that occurred during the API call
       console.error('Error fetching clients:', error);
     }
   };
 
   useEffect(() => {
-    fetchClients(page + 1, rowsPerPage); // Fetch the initial clients data when the component mounts
+    fetchClients(page, rowsPerPage);
   }, [page, rowsPerPage]);
 
   const handleOpenMenu = (event, selectedUser) => {
@@ -114,7 +115,7 @@ export default function UserPage() {
   };
 
   const handleEditUser = () => {
-    if(currentUserId){
+    if (currentUserId) {
       navigate(`/dashboard/clientes/editar/${currentUserId}`);
     }
   };
@@ -163,10 +164,30 @@ export default function UserPage() {
     setPage(0);
   };
 
+  const mapCategoryValue = (categoryName) => {
+    switch (categoryName) {
+      case 0:
+        return 'Identidad';
+      case 1:
+        return 'Salud';
+      case 2:
+        return 'Estudio';
+      case 3:
+        return 'Vivienda';
+      case 4:
+        return 'Otros';
+      default:
+        return 'Sin categoria';
+    }
+  };
 
   const filteredUsers = applySortFilter(clients, getComparator(order, orderBy), filterName);
 
   const isNotFound = !filteredUsers.length && !!filterName;
+
+  const handleViewFile = (fileId) => {
+    navigate(`/dashboard/files/view?id=${fileId}`);
+  };
 
   return (
     <>
@@ -179,7 +200,7 @@ export default function UserPage() {
           <Typography variant="h4" gutterBottom>
             Archivos
           </Typography>
-          <Button variant="contained" 
+          <Button variant="contained"
             startIcon={<Iconify icon="eva:plus-fill" />}
             onClick={() => navigate(`/dashboard/files/new`)}
           >
@@ -202,10 +223,10 @@ export default function UserPage() {
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
-                
+
                 <TableBody>
                   {applySortFilter(clients, getComparator(order, orderBy), filterName).map((row) => {
-                    const { id, name, lastName, email, avatarUrl, naturalPerson } = row;
+                    const { id, name, format, category, uploadTime } = row;
                     const selectedUser = selected.indexOf(name) !== -1;
                     return (
                       <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
@@ -215,16 +236,27 @@ export default function UserPage() {
 
                         <TableCell component="th" scope="row" padding="none">
                           <Stack direction="row" alignItems="center" spacing={2}>
-                            <Avatar alt={name} src={avatarUrl} />
                             <Typography variant="subtitle2" noWrap>
-                              {name} {lastName}
+                              {name}
                             </Typography>
                           </Stack>
                         </TableCell>
 
-                        <TableCell align="left">{email}</TableCell>
+                        <TableCell align="left">{format}</TableCell>
 
-                        <TableCell align="left">{naturalPerson ? 'Persona Natural' : 'Empresa'}</TableCell>
+                        <TableCell align="left">{mapCategoryValue(category)}</TableCell>
+
+                        <TableCell align="left">{uploadTime}</TableCell>
+
+                        <TableCell align="right">
+                          <IconButton
+                            size="large"
+                            color="inherit"
+                            onClick={() => handleViewFile(row.id)}
+                          >
+                            <Iconify icon={'eva:eye-fill'} />
+                          </IconButton>
+                        </TableCell>
 
                         <TableCell align="right">
                           <IconButton size="large" color="inherit" onClick={e => handleOpenMenu(e, row)}>
@@ -266,7 +298,7 @@ export default function UserPage() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={totalPages * rowsPerPage} // Assuming each page has rowsPerPage number of clients
+            count={totalPages * rowsPerPage}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -293,7 +325,7 @@ export default function UserPage() {
           },
         }}
       >
-        <MenuItem onClick={() => {handleEditUser()}}>
+        <MenuItem onClick={() => { handleEditUser() }}>
           <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
           Editar
         </MenuItem>

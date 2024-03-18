@@ -38,7 +38,7 @@ export default function FAQ() {
           textAlign: { sm: 'left', md: 'center' },
         }}
       >
-        Frequently asked questions
+        Preguntas más frecuentes
       </Typography>
       <Box sx={{ width: '100%' }}>
         <Accordion
@@ -51,7 +51,7 @@ export default function FAQ() {
             id="panel1d-header"
           >
             <Typography component="h3" variant="subtitle2">
-              How do I contact customer support if I have a question or issue?
+              ¿Cómo hago parte de AgileDevelopers?
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -60,10 +60,11 @@ export default function FAQ() {
               gutterBottom
               sx={{ maxWidth: { sm: '100%', md: '70%' } }}
             >
-              You can reach our customer support team by emailing
-              <Link> support@email.com </Link>
-              or calling our toll-free number. We&apos;re here to assist you
-              promptly.
+              En el caso de que ya estés registrado con otro operador, 
+              puedes solicitar la transferencia hacia AgileDevelopers 
+              por medio de tu operador. Si no estás en ningún operador, 
+              visita nuestro formulario de registro para ser parte del 
+              operador AgileDevelopers. <Link href="/signup">Regístrate AQUÍ</Link>.
             </Typography>
           </AccordionDetails>
         </Accordion>
@@ -77,7 +78,7 @@ export default function FAQ() {
             id="panel2d-header"
           >
             <Typography component="h3" variant="subtitle2">
-              Can I return the product if it doesn&apos;t meet my expectations?
+              ¿Qué beneficios ofrece AgileDevelopers en comparación con otros operadores?
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -86,34 +87,13 @@ export default function FAQ() {
               gutterBottom
               sx={{ maxWidth: { sm: '100%', md: '70%' } }}
             >
-              Absolutely! We offer a hassle-free return policy. If you&apos;re not
-              completely satisfied, you can return the product within [number of
-              days] days for a full refund or exchange.
-            </Typography>
-          </AccordionDetails>
-        </Accordion>
-        <Accordion
-          expanded={expanded === 'panel3'}
-          onChange={handleChange('panel3')}
-        >
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel3d-content"
-            id="panel3d-header"
-          >
-            <Typography component="h3" variant="subtitle2">
-              What makes your product stand out from others in the market?
-            </Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography
-              variant="body2"
-              gutterBottom
-              sx={{ maxWidth: { sm: '100%', md: '70%' } }}
-            >
-              Our product distinguishes itself through its adaptability, durability,
-              and innovative features. We prioritize user satisfaction and
-              continually strive to exceed expectations in every aspect.
+              AgileDevelopers se destaca por su enfoque centrado en el cliente, 
+              ofreciendo una plataforma intuitiva y servicios personalizados para
+              satisfacer tus necesidades. Nuestro equipo de expertos está 
+              comprometido a brindarte una experiencia única, desde la 
+              facilidad de uso hasta la eficiencia en la gestión de tus archivos. 
+              ¡Únete a nosotros hoy mismo y descubre la diferencia!
+              <Link href="/signup">Regístrate AQUÍ</Link>.
             </Typography>
           </AccordionDetails>
         </Accordion>
@@ -127,7 +107,7 @@ export default function FAQ() {
             id="panel4d-header"
           >
             <Typography component="h3" variant="subtitle2">
-              Is there a warranty on the product, and what does it cover?
+              ¿Cómo puedo compartir mis archivos con entidades públicas y privadas?
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -136,10 +116,10 @@ export default function FAQ() {
               gutterBottom
               sx={{ maxWidth: { sm: '100%', md: '70%' } }}
             >
-              Yes, our product comes with a [length of warranty] warranty. It covers
-              defects in materials and workmanship. If you encounter any issues
-              covered by the warranty, please contact our customer support for
-              assistance.
+              En AgileDevelopers, te ofrecemos una plataforma robusta para compartir
+              tus archivos de manera segura y eficiente. Con nuestras herramientas
+              integradas, puedes gestionar los permisos de acceso y colaborar 
+              con entidades tanto públicas como privadas.
             </Typography>
           </AccordionDetails>
         </Accordion>

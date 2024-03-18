@@ -10,6 +10,7 @@ import SignUpPage from './pages/SignUpPage';
 import Page404 from './pages/Page404';
 import DashboardAppPage from './pages/DashboardAppPage';
 import AddClientPage from './pages/AddClientPage'
+import ViewDocument from './pages/viewDocuments'
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -26,6 +27,7 @@ export default function Router() {
         { path: 'app', element: <DashboardAppPage /> },
         { path: 'files', element: <ClientsPage /> },
         { path: 'files/new', element: <AddClientPage/> },
+        { path: 'files/view', element: <ViewDocument /> },
       ],
     },
     {

@@ -4,6 +4,8 @@ import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import { LoadingButton } from '@mui/lab';
 import { v4 as uuidv4 } from 'uuid';
+import { enqueueSnackbar } from 'notistack'; // Import enqueueSnackbar
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import coplandFileManager from '../../services/coplandFileManager';
 
 const initialState = {
@@ -27,6 +29,7 @@ const initialState = {
 
 export default function RegistrationForm({ id }) {
     const [formData, setFormData] = useState(initialState);
+    const navigate = useNavigate(); // Hook useNavigate
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -81,7 +84,15 @@ export default function RegistrationForm({ id }) {
                 };
                 const signedUrlResponse = await coplandFileManager.uploadFileSignedUrl(dataToSend);
                 await coplandFileManager.uploadFile(signedUrlResponse.content.url, fileInfo.mimeType, formData.file);
+
+                // Mostrar notificación de éxito
+                enqueueSnackbar(id ? 'Archivo editado con éxito' : 'Registro efectuado con éxito', { variant: 'success' });
+
+                // Limpiar formulario
                 setFormData(initialState);
+
+                // Redirigir al usuario
+                navigate('/dashboard/files');
             } catch (error) {
                 setFormData((prevData) => ({
                     ...prevData,
@@ -89,6 +100,7 @@ export default function RegistrationForm({ id }) {
                     isSuccess: false,
                     error: 'Ocurrió un error al realizar la operación. Por favor, inténtalo de nuevo más tarde.'
                 }));
+                enqueueSnackbar('Ocurrió un error al subir el archivo. Por favor, inténtalo de nuevo más tarde.', { variant: 'error' });
                 console.log(error);
             }
         } else {
@@ -162,10 +174,10 @@ export default function RegistrationForm({ id }) {
                     {formData.isSuccess && (
                         <Alert severity="success">
                             <AlertTitle>
-                                {id ? "Archivo editado con éxito" : "Registro efectuado con éxito"}
+                                {id ? 'Archivo editado con éxito' : 'Registro efectuado con éxito'}
                             </AlertTitle>
-                            {id ? "El Archivo se ha editado de forma exitosa con los nuevos valores" :
-                                "El Archivo se a registrado de forma exitosa"
+                            {id ? 'El Archivo se ha editado de forma exitosa con los nuevos valores' :
+                                'El Archivo se a registrado de forma exitosa'
                             }
                         </Alert>
                     )}
@@ -201,7 +213,7 @@ export default function RegistrationForm({ id }) {
                         <MenuItem value="Health">Salud</MenuItem>
                         <MenuItem value="Study">Estudio</MenuItem>
                         <MenuItem value="Living">Vivienda</MenuItem>
-                        <MenuItem value="Default">Por defecto</MenuItem>
+                        <MenuItem value="Default">Otros</MenuItem>
                     </Select>
 
                     {formData.documentTypeError && (

@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import { jwtDecode } from 'jwt-decode';
-import { enqueueSnackbar } from 'notistack'; // Import enqueueSnackbar
 import keroAuth from '../services/keroAuth';
 
 const useUserStore = create((set) => ({

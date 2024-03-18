@@ -65,8 +65,8 @@ export default function Hero() {
             width: '100%',
             backgroundImage:
               theme.palette.mode === 'light'
-                ? 'url("https://cdn.discordapp.com/attachments/678439901544316931/1217677292457689248/bocchi-blogroll-1672352846343.jpg?ex=6604e559&is=65f27059&hm=78ec2cc44a195bec33a7234f9418a071613dcdc82fc7c7e576aceaa0b8ed1097&")'
-                : 'url("https://cdn.discordapp.com/attachments/678439901544316931/1217677292457689248/bocchi-blogroll-1672352846343.jpg?ex=6604e559&is=65f27059&hm=78ec2cc44a195bec33a7234f9418a071613dcdc82fc7c7e576aceaa0b8ed1097&")',
+                ? 'url("/assets/illustrations/welcomeImage.png")'
+                : 'url("/assets/illustrations/welcomeImage.png")',
             backgroundSize: 'cover',
             borderRadius: '10px',
             outline: '1px solid',

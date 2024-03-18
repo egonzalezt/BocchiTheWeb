@@ -38,16 +38,29 @@ class CoplandFileManager {
 
   async getFiles(pageIndex, pageSize) {
     try {
-      const response = await this.axios.get("/File/get-files", {
+      const response = await this.axios.get(`/File/get-files?pageIndex=${pageIndex}&pageSize=${pageSize}`, {
         headers: {
           pageIndex,
           pageSize,
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`
         }
       });
-      return response.data;
+      return response;
     } catch (error) {
       throw new Error("Error al obtener los archivos");
+    }
+  }
+
+  async getFileUrl(fileId) {
+    try {
+      const response = await this.axios.get(`/File/get-file-url?fileId=${fileId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+        }
+      });
+      return response.data.content;
+    } catch (error) {
+      throw new Error("Error al obtener la URL firmada para el archivo");
     }
   }
 }

@@ -5,7 +5,6 @@ import { Container, Typography } from '@mui/material';
 import { ClientForm } from '../sections/client';
 
 export default function AddClientPage(props) {
-  const theme = useTheme();
   const { id } = useParams();
 
   return (
