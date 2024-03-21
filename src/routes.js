@@ -12,6 +12,7 @@ import DashboardAppPage from './pages/DashboardAppPage';
 import AddClientPage from './pages/AddClientPage'
 import ViewDocument from './pages/viewDocuments'
 import PasswordReset from './pages/PasswordReset'
+import TransferUser from './pages/TransferUser'
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -26,6 +27,7 @@ export default function Router() {
       children: [
         { element: <Navigate to="/dashboard/files" />, index: true },
         { path: 'app', element: <DashboardAppPage /> },
+        { path: 'transfer', element: <TransferUser /> },
         { path: 'files', element: <ClientsPage /> },
         { path: 'files/new', element: <AddClientPage/> },
         { path: 'files/view', element: <ViewDocument /> },

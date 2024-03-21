@@ -18,6 +18,7 @@ export default function LoginForm() {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [loginError, setLoginError] = useState('');
+  const [loading, setLoading] = useState(false); // Estado para controlar la carga
 
   const handleClick = () => {
     setEmailError('');
@@ -40,6 +41,8 @@ export default function LoginForm() {
     }
 
     if (isValid) {
+      setLoading(true); // Establecer estado de carga a true durante la solicitud
+
       KeroAuthApi.login({ email, password })
         .then((response) => {
           const { accessToken } = response.data;
@@ -48,6 +51,9 @@ export default function LoginForm() {
         })
         .catch(() => {
           setLoginError('Credenciales inválidas. Por favor, verifique su correo electrónico y contraseña.');
+        })
+        .finally(() => {
+          setLoading(false); // Establecer estado de carga a false después de la solicitud
         });
     }
   };
@@ -108,7 +114,7 @@ export default function LoginForm() {
         </Link>
       </Stack>
 
-      <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleClick}>
+      <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleClick} loading={loading}>
         Inicio de sesión
       </LoadingButton>
     </>

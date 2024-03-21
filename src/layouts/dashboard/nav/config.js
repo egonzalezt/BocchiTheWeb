@@ -17,6 +17,11 @@ const navConfig = [
       }
     ],
   },
+  {
+    title: 'Cambio de operador',
+    path: '/dashboard/transfer',
+    icon: icon('ic_transfer'),
+  },
 ];
 
 export default navConfig;
